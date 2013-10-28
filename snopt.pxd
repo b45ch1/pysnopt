@@ -14,6 +14,29 @@ cdef extern from "f2c.h":
     ctypedef char integer1
 
 cdef extern from "snopt.hh":
+    ctypedef int (*My_fp)( integer *Status, integer *n,
+            doublereal x[],     integer *needF,
+            integer *neF,  doublereal F[],
+            integer    *needG,  integer *neG,  doublereal G[],
+            char       *cu,     integer *lencu,
+            integer    iu[],    integer *leniu,
+            doublereal ru[],    integer *lenru )
+
+    void snopta_( integer *start, integer *nf, integer *n,
+            integer *nxname, integer *nfname, doublereal *objadd, integer *objrow,
+            char *prob, My_fp usrfun, integer *iafun, integer *javar,
+            integer *lena, integer *nea, doublereal *a, integer *igfun,
+            integer *jgvar, integer *leng, integer *neg, doublereal *xlow,
+            doublereal *xupp, char *xnames, doublereal *flow, doublereal *fupp,
+            char *fnames, doublereal *x, integer *xstate, doublereal *xmul,
+            doublereal *f, integer *fstate, doublereal *fmul, integer *inform__,
+            integer *mincw, integer *miniw, integer *minrw, integer *ns,
+            integer *ninf, doublereal *sinf, char *cu, integer *lencu, integer *iu,
+            integer *leniu, doublereal *ru, integer *lenru, char *cw, integer *lencw,
+            integer *iw, integer *leniw, doublereal *rw, integer *lenrw,
+            ftnlen prob_len, ftnlen xnames_len, ftnlen fnames_len, ftnlen cu_len,
+            ftnlen cw_len)
+
     void sninit_( integer *iPrint, integer *iSumm, char *cw,
-       integer *lencw, integer *iw, integer *leniw,
-       doublereal *rw, integer *lenrw, ftnlen cw_len )
+            integer *lencw, integer *iw, integer *leniw,
+            doublereal *rw, integer *lenrw, ftnlen cw_len )
