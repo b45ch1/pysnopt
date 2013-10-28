@@ -33,3 +33,8 @@ cdef extern from "snopt.hh":
        integer *iw, integer *leniw,
        doublereal *rw, integer *lenrw,
        ftnlen buffer_len, ftnlen cw_len)
+
+    void sngetc_( char *buffer, char *ivalue, integer *inform__,
+       char *cw, integer *lencw, integer *iw,
+       integer *leniw, doublereal *rw, integer *lenrw,
+       ftnlen buffer_len, ftnlen ivalue_len, ftnlen cw_len)
