@@ -22,3 +22,8 @@ cdef extern from "snopt.hh":
        char *cw, integer *lencw, integer *iw,
        integer *leniw, doublereal *rw, integer *lenrw,
        ftnlen buffer_len, ftnlen cw_len)
+
+    void sngetr_( char *buffer, doublereal *ivalue, integer *inform__,
+           char *cw, integer *lencw, integer *iw,
+           integer *leniw, doublereal *rw, integer *lenrw,
+           ftnlen buffer_len, ftnlen cw_len)

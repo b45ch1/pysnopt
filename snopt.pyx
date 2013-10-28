@@ -42,8 +42,8 @@ def sninit(integer iPrint,
 
 
 def sngeti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
-           integer ivalue,
-           integer inform,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] ivalue,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
            np.ndarray[np.int8_t,     ndim=1, mode='c'] cw,
            np.ndarray[np.int64_t,    ndim=1, mode='c'] iw,
            np.ndarray[np.float64_t,  ndim=1, mode='c'] rw):
@@ -66,7 +66,31 @@ def sngeti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
 
 
     sngeti_( <char*>       bu.data,
-             &ivalue, &inform,
+             <integer*>    ivalue.data,
+             <integer*>    inform.data,
+             <char*>       cw.data, &lencw,
+             <integer*>    iw.data, &leniw,
+             <doublereal*> rw.data, &lenrw,
+             lenbu, lencw)
+
+
+def sngetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
+           np.ndarray[np.float64_t,  ndim=1, mode='c'] rvalue,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
+           np.ndarray[np.int8_t,     ndim=1, mode='c'] cw,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] iw,
+           np.ndarray[np.float64_t,  ndim=1, mode='c'] rw):
+
+    check_cw_iw_rw()
+
+    cdef integer lenbu = bu.shape[0]
+    cdef integer lencw = cw.shape[0]
+    cdef integer leniw = iw.shape[0]
+    cdef integer lenrw = rw.shape[0]
+
+    sngetr_( <char*>       bu.data,
+             <doublereal*> rvalue.data,
+             <integer*>    inform.data,
              <char*>       cw.data, &lencw,
              <integer*>    iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
