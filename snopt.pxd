@@ -44,3 +44,9 @@ cdef extern from "snopt.hh":
        integer *lencw, integer *iw, integer *leniw,
        doublereal *rw, integer *lenrw, ftnlen buffer_len,
        ftnlen cw_len)
+
+    void snsetr_( char *buffer, doublereal *rvalue, integer * iprint,
+       integer *isumm, integer *inform__, char *cw,
+       integer *lencw, integer *iw, integer *leniw,
+       doublereal *rw, integer *lenrw, ftnlen buffer_len,
+       ftnlen cw_len)
