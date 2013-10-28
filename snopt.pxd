@@ -50,3 +50,7 @@ cdef extern from "snopt.hh":
        integer *lencw, integer *iw, integer *leniw,
        doublereal *rw, integer *lenrw, ftnlen buffer_len,
        ftnlen cw_len)
+
+    void snspec_( integer *ispecs, integer *inform__, char *cw,
+         integer *lencw, integer *iw, integer *leniw,
+         doublereal *rw, integer *lenrw, ftnlen cw_len)
