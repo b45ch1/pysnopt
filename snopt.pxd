@@ -61,3 +61,15 @@ cdef extern from "snopt.hh":
        integer *minrw, char *cw, integer *lencw, integer *iw,
        integer *leniw, doublereal *rw, integer *lenrw,
        ftnlen cw_len)
+
+    void snjac_( integer *inform__, integer *nf, integer *n, My_fp userfg,
+         integer *iafun, integer *javar, integer *lena,
+         integer *nea, doublereal *a, integer *igfun,
+         integer *jgvar, integer *leng, integer *neg,
+         doublereal *x, doublereal *xlow, doublereal *xupp,
+         integer *mincw, integer *miniw,
+         integer *minrw, char *cu, integer *lencu,
+         integer *iu, integer *leniu, doublereal *ru,
+         integer *lenru, char *cw, integer *lencw, integer *iw,
+         integer *leniw, doublereal *rw, integer *lenrw,
+         ftnlen cu_len, ftnlen cw_len )
