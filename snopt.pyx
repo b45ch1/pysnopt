@@ -18,8 +18,8 @@ def check_cw_iw_rw(cw, iw, rw):
     assert iw.shape[0] >= 500, 'iw.size must be >= 500'
     assert rw.shape[0] >= 500, 'rw.size must be >= 500'
 
-def sninit(integer iPrint,
-           integer iSumm,
+def sninit(np.ndarray[np.int64_t,     ndim=1, mode='c'] iPrint,
+           np.ndarray[np.int64_t,     ndim=1, mode='c'] iSumm,
            np.ndarray[np.int8_t,     ndim=1, mode='c'] cw,
            np.ndarray[np.int64_t,     ndim=1, mode='c'] iw,
            np.ndarray[np.float64_t,  ndim=1, mode='c'] rw ):
@@ -32,7 +32,8 @@ def sninit(integer iPrint,
     cdef integer lenrw = rw.shape[0]
     cdef ftnlen str_len = 8
 
-    sninit_( &iPrint, &iSumm,
+    sninit_( <integer*> iPrint.data,
+             <integer*> iSumm.data,
              <char*> cw.data, &lencw,
              <integer*> iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
@@ -98,11 +99,12 @@ def sngetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
 
 
 def snset(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
-           integer iprint, integer isumm,
-           np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
-           np.ndarray[np.int8_t,     ndim=1, mode='c'] cw,
-           np.ndarray[np.int64_t,    ndim=1, mode='c'] iw,
-           np.ndarray[np.float64_t,  ndim=1, mode='c'] rw):
+          np.ndarray[np.int64_t,    ndim=1, mode='c'] iprint,
+          np.ndarray[np.int64_t,    ndim=1, mode='c'] isumm,
+          np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
+          np.ndarray[np.int8_t,     ndim=1, mode='c'] cw,
+          np.ndarray[np.int64_t,    ndim=1, mode='c'] iw,
+          np.ndarray[np.float64_t,  ndim=1, mode='c'] rw):
 
     check_cw_iw_rw(cw, iw, rw)
 
@@ -111,14 +113,14 @@ def snset(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
     cdef integer leniw = iw.shape[0]
     cdef integer lenrw = rw.shape[0]
 
-    snset_( <char*>       bu.data,
-            &iprint,
-            &isumm,
-             <integer*>    inform.data,
-             <char*>       cw.data, &lencw,
-             <integer*>    iw.data, &leniw,
-             <doublereal*> rw.data, &lenrw,
-             lenbu, lencw)
+    snset_( <char*>        bu.data,
+            <integer*>     iprint.data,
+            <integer*>     isumm.data,
+            <integer*>     inform.data,
+            <char*>        cw.data, &lencw,
+            <integer*>     iw.data, &leniw,
+            <doublereal*>  rw.data, &lenrw,
+            lenbu, lencw)
 
 def sngetc(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
            np.ndarray[np.int8_t,     ndim=1, mode='c'] ivalue,
@@ -143,3 +145,31 @@ def sngetc(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
              <integer*>    iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
              lenbu, lenivalue, lencw)
+
+
+def snseti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] ivalue,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] iprint,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] isumm,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
+           np.ndarray[np.int8_t,     ndim=1, mode='c'] cw,
+           np.ndarray[np.int64_t,    ndim=1, mode='c'] iw,
+           np.ndarray[np.float64_t,  ndim=1, mode='c'] rw):
+
+    check_cw_iw_rw(cw, iw, rw)
+
+    cdef integer lenbu     = bu.shape[0]
+    cdef integer lencw     = cw.shape[0]
+    cdef integer leniw     = iw.shape[0]
+    cdef integer lenrw     = rw.shape[0]
+    cdef integer lenivalue = ivalue.shape[0]
+
+    snseti_( <char*>       bu.data,
+             <integer*>    ivalue.data,
+             <integer*>    iprint.data,
+             <integer*>    isumm.data,
+             <integer*>    inform.data,
+             <char*>       cw.data, &lencw,
+             <integer*>    iw.data, &leniw,
+             <doublereal*> rw.data, &lenrw,
+             lenbu, lencw)

@@ -38,3 +38,9 @@ cdef extern from "snopt.hh":
        char *cw, integer *lencw, integer *iw,
        integer *leniw, doublereal *rw, integer *lenrw,
        ftnlen buffer_len, ftnlen ivalue_len, ftnlen cw_len)
+
+    void snseti_( char *buffer, integer *ivalue, integer *iprint,
+       integer *isumm, integer *inform__, char *cw,
+       integer *lencw, integer *iw, integer *leniw,
+       doublereal *rw, integer *lenrw, ftnlen buffer_len,
+       ftnlen cw_len)
