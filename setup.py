@@ -15,16 +15,17 @@ BASEDIR = os.path.dirname(BASEDIR)
 extra_params = {}
 extra_params['include_dirs'] = [
     '/usr/include',
-    os.path.join(BASEDIR, 'include'),
+    os.path.join(BASEDIR, 'f2c/src'),
+    os.path.join(BASEDIR, 'cppsrc'),
     np.get_include()]
-extra_params['extra_compile_args'] = ["-O2"]
+extra_params['extra_compile_args'] = ["-O2", "-g"]
 extra_params['extra_link_args'] = ["-Wl,-O1", "-Wl,--as-needed"]
 
 extra_params = extra_params.copy()
 extra_params['libraries'] = ['snopt7']
 
 extra_params['library_dirs'] = ['/usr/lib', os.path.join(BASEDIR, 'lib')]
-extra_params['language'] = 'fortran'
+extra_params['language'] = 'c++'
 
 if os.name == 'posix':
     extra_params['runtime_library_dirs'] = extra_params['library_dirs']

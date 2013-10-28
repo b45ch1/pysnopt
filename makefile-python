@@ -5,7 +5,7 @@
 .SUFFIXES: .so .o. f
 
 FC        = gfortran
-FFLAGS    = -O3 -fPIC -shared
+FFLAGS    = -O0 -fPIC -shared -g
 OBJ       = $(PWD)/obj
 LIB       = $(PWD)/lib
 
