@@ -54,3 +54,10 @@ cdef extern from "snopt.hh":
     void snspec_( integer *ispecs, integer *inform__, char *cw,
          integer *lencw, integer *iw, integer *leniw,
          doublereal *rw, integer *lenrw, ftnlen cw_len)
+
+    void snmema_( integer *iexit, integer *nf, integer *n, integer *nxname,
+       integer *nfname, integer *nea, integer *neg,
+       integer *mincw, integer *miniw,
+       integer *minrw, char *cw, integer *lencw, integer *iw,
+       integer *leniw, doublereal *rw, integer *lenrw,
+       ftnlen cw_len)
