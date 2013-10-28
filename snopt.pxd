@@ -27,3 +27,9 @@ cdef extern from "snopt.hh":
            char *cw, integer *lencw, integer *iw,
            integer *leniw, doublereal *rw, integer *lenrw,
            ftnlen buffer_len, ftnlen cw_len)
+
+    void snset_( char *buffer, integer *iprint, integer *isumm,
+       integer *inform__, char *cw, integer *lencw,
+       integer *iw, integer *leniw,
+       doublereal *rw, integer *lenrw,
+       ftnlen buffer_len, ftnlen cw_len)
