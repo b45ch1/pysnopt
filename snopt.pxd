@@ -17,3 +17,8 @@ cdef extern from "snopt.hh":
     void sninit_( integer *iPrint, integer *iSumm, char *cw,
        integer *lencw, integer *iw, integer *leniw,
        doublereal *rw, integer *lenrw, ftnlen cw_len )
+
+    void sngeti_( char *buffer, integer *ivalue, integer *inform__,
+       char *cw, integer *lencw, integer *iw,
+       integer *leniw, doublereal *rw, integer *lenrw,
+       ftnlen buffer_len, ftnlen cw_len)
