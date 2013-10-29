@@ -1,5 +1,8 @@
 # author: Sebastian F. Walter, Manuel Kudruss
 
+cdef extern from "stdio.h":
+    void * memcpy ( void * destination, const void * source, size_t num )
+
 cdef extern from "f2c.h":
     ctypedef int ftnlen
     ctypedef long int integer
