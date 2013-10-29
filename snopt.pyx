@@ -7,6 +7,21 @@ from cython.operator cimport dereference as deref
 
 cimport snopt
 
+
+cdef struct cw_struct:
+    char* cw
+    void* userfun
+
+cdef int callback(integer *Status, integer *n,
+                  doublereal *x,     integer *needF,
+                  integer    *neF,   doublereal *F,
+                  integer    *needG, integer *neG,  doublereal *G,
+                  char       *cu,    integer *lencu,
+                  integer    *iu,    integer *leniu,
+                  doublereal *ru,    integer *lenru):
+    print 'bla'
+    pass
+
 def check_memory_compatibility():
     assert sizeof(np.int8_t) == sizeof(char), 'sizeof(np.int8_t) != sizeof(char)'
     assert sizeof(np.int64_t) == sizeof(integer), 'sizeof(np.int64_t) != sizeof(integer)'
@@ -392,33 +407,36 @@ def snjac( np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
 
     check_cw_iw_rw(cw, iw, rw)
 
-    cdef integer lencu     = cu.shape[0]
     cdef integer lencw     = cw.shape[0]
     cdef integer leniw     = iw.shape[0]
     cdef integer lenrw     = rw.shape[0]
+    cdef integer lencu     = cu.shape[0]
+    cdef integer leniu     = iu.shape[0]
+    cdef integer lenru     = ru.shape[0]
 
-    snjac_( <integer*> inform,
-            <integer*> nf,
-            <integer*> n,
-            userfg,
-            <integer*> iafun,
-            <integer*> javar,
-            <integer*> lena,
-            <integer*> nea,
-            <doublereal*> a,
-            <integer*> igfun,
-            <integer*> jgvar,
-            <integer*> leng,
-            <integer*> neg,
-            <doublereal*> x,
-            <doublereal*> xlow,
-            <doublereal*> xupp,
-            <integer*> mincw,
-            <integer*> miniw,
-            <integer*> minrw,
-            <char*> cu,
-            <integer*> iu,
-            <doublereal*> ru,
+
+    snjac_( <integer*>    inform.data,
+            <integer*>    nf.data,
+            <integer*>    n.data,
+            callback,
+            <integer*>    iafun.data,
+            <integer*>    javar.data,
+            <integer*>    lena.data,
+            <integer*>    nea.data,
+            <doublereal*> a.data,
+            <integer*>    igfun.data,
+            <integer*>    jgvar.data,
+            <integer*>    leng.data,
+            <integer*>    neg.data,
+            <doublereal*> x.data,
+            <doublereal*> xlow.data,
+            <doublereal*> xupp.data,
+            <integer*>    mincw.data,
+            <integer*>    miniw.data,
+            <integer*>    minrw.data,
+            <char*>       cu.data, &lencu,
+            <integer*>    iu.data, &leniu,
+            <doublereal*> ru.data, &lenru,
             <char*>       cw.data, &lencw,
             <integer*>    iw.data, &leniw,
             <doublereal*> rw.data, &lenrw,
