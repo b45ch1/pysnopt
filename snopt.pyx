@@ -29,11 +29,18 @@ cdef int callback(integer    *Status,   integer    *n,
     shape[0]  = 1
     status_   = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, Status)
 
-    neF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neF)
-    neG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neG)
-
     needF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needF)
+    neF_      = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neF)
+    shape[0]  = neF[0]
+    F_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, F)
+
+    shape[0]  = 1
     needG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needG)
+    neG_      = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neG)
+    G_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, G)
+    if needG_[0] == 1:
+        shape[0]  = neG[0]
+        G_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, G)
 
     shape[0]  = leniu[0]
     iu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, iu)
@@ -43,10 +50,7 @@ cdef int callback(integer    *Status,   integer    *n,
 
     shape[0]  = n[0]
     x_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, x)
-    shape[0]  = neF[0]
-    F_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, F)
-    shape[0]  = neG[0]
-    G_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, G)
+
     shape[0]  = lenru[0]
     ru_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, ru)
 
