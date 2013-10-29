@@ -29,11 +29,11 @@ cdef int callback(integer    *Status,   integer    *n,
     shape[0]  = 1
     status_   = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, Status)
 
-    neF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needF)
-    neG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needG)
+    neF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neF)
+    neG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neG)
 
-    needF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neF)
-    needG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neG)
+    needF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needF)
+    needG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needG)
 
     shape[0]  = leniu[0]
     iu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, iu)
