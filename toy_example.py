@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-
-import numpy as np
 from __future__ import print_function
 
+import snopt
+import numpy as np
+
 def toy0(inform, Prob, neF, n, ObjAdd, ObjRow, xlow, xupp,
-         Flow, upp, x, xstate, Fmul):
+         Flow, Fupp, x, xstate, Fmul):
 
     """
     ==================================================================
@@ -35,7 +36,7 @@ def toy0(inform, Prob, neF, n, ObjAdd, ObjRow, xlow, xupp,
     ==================================================================
     """
     # Give the problem a name.
-    print('%s %s' %(Prob, 'Toy0'))
+    Prob[:4] = list('Toy0')
 
     # Assign the dimensions of the constraint Jacobian */
 
@@ -187,7 +188,7 @@ def toy1( inform, Prob, neF, n,
     neA[0] = 0
 
 
-def toyusrfg_(status, x, needF, F, needG, G, cu, iu, ru):
+def toyusrfg(status, x, needF, F, needG, G, cu, iu, ru):
     """
     ==================================================================
     Computes the nonlinear objective and constraint terms for the toy
@@ -208,37 +209,36 @@ def toyusrfg_(status, x, needF, F, needG, G, cu, iu, ru):
         F[1] = x[0]*x[0] + 4*x[1]*x[1]
         F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
 
-
     if( needG[0]> 0 ):
-        neG[0]= 0
+        neG = 0
         # iGfun[*neG] = 1 */
         # jGvar[*neG] = 1 */
-        G[neG[0]] = 0
+        G[neG] = 0
 
-        # iGfun[neG[0]] = 1 */
-        # jGvar[neG[0]] = 2 */
-        neG[0] += 1
-        G[neG[0]] = 1.0
+        # iGfun[neG] = 1 */
+        # jGvar[neG] = 2 */
+        neG += 1
+        G[neG] = 1.0
 
-        # iGfun[neG[0]] = 2 */
-        # jGvar[neG[0]] = 1 */
-        neG[0] += 1
-        G[neG[0]] = 2*x[0]
+        # iGfun[neG] = 2 */
+        # jGvar[neG] = 1 */
+        neG += 1
+        G[neG] = 2*x[0]
 
-        # iGfun[neG[0]] = 2 */
-        # jGvar[neG[0]] = 2 */
-        neG[0] += 1
-        G[neG[0]] = 8*x[1]
+        # iGfun[neG] = 2 */
+        # jGvar[neG] = 2 */
+        neG += 1
+        G[neG] = 8*x[1]
 
-        # iGfun[neG[0]] = 3 */
-        # jGvar[neG[0]] = 1 */
-        neG[0] += 1
-        G[neG[0]] = 2*(x[0] - 2)
+        # iGfun[neG] = 3 */
+        # jGvar[neG] = 1 */
+        neG += 1
+        G[neG] = 2*(x[0] - 2)
 
-        # iGfun[neG[0]] = 3 */
-        # jGvar[neG[0]] = 2 */
-        neG[0] += 1
-        G[neG[0]] = 2*x[1]
+        # iGfun[neG] = 3 */
+        # jGvar[neG] = 2 */
+        neG += 1
+        G[neG] = 2*x[1]
         neG[0] += 1
 
     return 0
@@ -248,17 +248,17 @@ def main():
     leniw = 10000
     lencw = 500
 
-    minrw = np.zeros((1), dtype=np.float64)
+    minrw = np.zeros((1), dtype=np.int64)
     miniw = np.zeros((1), dtype=np.int64)
-    mincw = np.zeros((1), dtype=np.int8)
+    mincw = np.zeros((1), dtype=np.int64)
 
     rw = np.zeros((20000,), dtype=np.float64)
     iw = np.zeros((10000,), dtype=np.int64)
-    cw = np.zeros((8*500,), dtype=np.int8)
+    cw = np.zeros((8*500,), dtype=np.character)
 
-    Cold  = 0
-    Basis = 1
-    Warm  = 2
+    Cold  = np.array([0], dtype=np.int64)
+    Basis = np.array([1], dtype=np.int64)
+    Warm  = np.array([2], dtype=np.int64)
 
     x    = np.zeros((2,), dtype=np.float64)
     xlow = np.zeros((2,), dtype=np.float64)
@@ -303,9 +303,9 @@ def main():
     nxname[0] = 1
     nFname[0] = 1
 
-    xnames = np.zeros((1*8,), dtype=np.int8)
-    Fnames = np.zeros((1*8,), dtype=np.int8)
-    Prob   = np.zeros((200*8,), dtype=np.int8)
+    xnames = np.zeros((1*8,), dtype=np.character)
+    Fnames = np.zeros((1*8,), dtype=np.character)
+    Prob   = np.zeros((200*8,), dtype=np.character)
 
     iSpecs   = np.zeros((1,), dtype=np.int64)
     spec_len = np.zeros((1,), dtype=np.int64)
@@ -317,8 +317,8 @@ def main():
     iSumm [0] = 6
     iPrint[0] = 9
 
-    printname = np.zeros((200*8,), dtype=np.int8)
-    specname  = np.zeros((200*8,), dtype=np.int8)
+    printname = np.zeros((200*8,), dtype=np.character)
+    specname  = np.zeros((200*8,), dtype=np.character)
 
     nS   = np.zeros((1,), dtype=np.int64)
     nInf = np.zeros((1,), dtype=np.int64)
@@ -329,16 +329,15 @@ def main():
     Major      = np.zeros((1,), dtype=np.int64)
     iSum       = np.zeros((1,), dtype=np.int64)
     iPrt       = np.zeros((1,), dtype=np.int64)
-    strOpt_len = np.zeros((1,), dtype=np.int64)
-    strOpt     = np.zeros((200*8,), dtype=np.int8)
+    strOpt     = np.zeros((200*8,), dtype=np.character)
 
     print("\nSolving toy0 without first derivatives ...\n")
 
     # open output files using snfilewrappers.[ch] */
     specn  = "sntoya.spc"
     printn = "sntoya.out"
-    specname [:len(specn)  = [ord(x) for x in specn]
-    printname[:len(printn) = [ord(x) for x in printn]
+    specname [:len(specn)]  = list(specn)
+    printname[:len(printn)] = list(printn)
 
     # Open the print file, fortran style */
     snopt.snopenappend(iPrint, printname, INFO)
@@ -359,13 +358,12 @@ def main():
 
     toy0(INFO, Prob, neF, n, ObjAdd, ObjRow, xlow, xupp,
          Flow, Fupp, x, xstate, Fmul)
-    npname = len(Prob)
 
     # SnoptA will compute the Jacobian by finite-differences.   */
     # The user has the option of calling  snJac  to define the  */
     # coordinate arrays (iAfun,jAvar,A) and (iGfun, jGvar).     */
 
-    snopt.snjac(INFO, neF, n, toyusrf_,
+    snopt.snjac(INFO, neF, n, toyusrf,
                 iAfun, jAvar, lenA, neA, A,
                 iGfun, jGvar, lenG, neG,
                 x, xlow, xupp, mincw, miniw, minrw,
@@ -377,20 +375,19 @@ def main():
     # file respectively.  Setting them to 0 suppresses printing.         */
     # ------------------------------------------------------------------ */
 
-    DerOpt = 0
-    iPrt   = 0
-    iSum   = 0
+    DerOpt = np.array([0], dtype=np.int64)
+    iPrt   = np.array([0], dtype=np.int64)
+    iSum   = np.array([0], dtype=np.int64)
     strOpt_s = "Derivative option"
-    strOpt[:len(strOpt] = [ord(x) for x in strOpt_s]
-    strOpt_len = len(strOpt)
+    strOpt[:len(strOpt_s)] = list(strOpt_s)
     snopt.snseti(strOpt, DerOpt, iPrt, iSum, INFO, cw, iw, rw)
 
     #     ------------------------------------------------------------------ */
     #     Go for it, using a Cold start.                                     */
     #     ------------------------------------------------------------------ */
 
-    snopta(Cold, neF, n, nxname, nFname,
-           ObjAdd, ObjRow, Prob, toyusrf_,
+    snopt.snopta(Cold, neF, n, nxname, nFname,
+           ObjAdd, ObjRow, Prob, toyusrf,
            iAfun, jAvar, lenA, neA, A,
            iGfun, jGvar, lenG, neG,
            xlow, xupp, xnames, Flow, Fupp, Fnames,
@@ -416,21 +413,20 @@ def main():
         print("Warning: trouble reading specs file %s \n"%(specname))
 
     # Specify any user options not set in the Specs file. */
-    DerOpt = 1
+    DerOpt[0] = 1
     snopt.snseti(strOpt, DerOpt, iPrint, iSumm, INFO, cw, iw, rw)
 
-    Major = 250
+    Major = np.array([250], dtype=np.int64)
     strOpt_s = "Major Iteration limit"
-    strOpt[:len(strOpt] = [ord(x) for x in strOpt_s]
-    strOpt_len = len(strOpt)
+    strOpt[:len(strOpt_s)] = list(strOpt_s)
     snopt.snseti( strOpt, Major, iPrint, iSumm, INFO, cw, iw, rw)
 
     # ------------------------------------------------------------------ */
     # Solve the problem again, this time with derivatives specified.     */
     # ------------------------------------------------------------------ */
 
-    snopta(Cold, neF, n, nxname, nFname,
-           ObjAdd, ObjRow, Prob, toyusrfg_,
+    snopt.snopta(Cold, neF, n, nxname, nFname,
+           ObjAdd, ObjRow, Prob, toyusrfg,
            iAfun, jAvar, lenA, neA, A,
            iGfun, jGvar, lenG, neG,
            xlow, xupp, xnames, Flow, Fupp, Fnames,
