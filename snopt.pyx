@@ -7,20 +7,49 @@ from cython.operator cimport dereference as deref
 
 cimport snopt
 
+np.import_array()
 
-cdef struct cw_struct:
-    char* cw
+cdef struct cu_struct:
+    char* cu
     void* userfun
 
-cdef int callback(integer *Status, integer *n,
-                  doublereal *x,     integer *needF,
-                  integer    *neF,   doublereal *F,
-                  integer    *needG, integer *neG,  doublereal *G,
-                  char       *cu,    integer *lencu,
-                  integer    *iu,    integer *leniu,
-                  doublereal *ru,    integer *lenru):
-    print 'bla'
-    pass
+cdef int callback(integer    *Status,   integer    *n,
+                  doublereal *x,        integer    *needF,
+                  integer    *neF,      doublereal *F,
+                  integer    *needG,    integer    *neG,
+                  doublereal *G,
+                  char       *cu,       integer    *lencu,
+                  integer    *iu,       integer    *leniu,
+                  doublereal *ru,       integer    *lenru):
+
+    cus = <cu_struct*>cu
+    cu_ = cus.cu
+    userfun_ = cus.userfun
+
+    cdef np.npy_intp shape[1]
+
+    shape[0]  = 1
+    status_   = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, Status)
+
+    needF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needF)
+    needG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needG)
+
+    shape[0]  = leniu[0]
+    iu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, iu)
+
+    shape[0]  = lencu[0]
+    cu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT8, cu)
+
+    shape[0]  = n[0]
+    x_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, x)
+    shape[0]  = neF[0]
+    F_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, F)
+    shape[0]  = neG[0]
+    G_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, G)
+    shape[0]  = lenru[0]
+    ru_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, ru)
+
+    (<object>userfun_)(status_, x_, needF_, F_, needG_, G_, cu_, iu_,  ru_)
 
 def check_memory_compatibility():
     assert sizeof(np.int8_t) == sizeof(char), 'sizeof(np.int8_t) != sizeof(char)'
@@ -414,6 +443,9 @@ def snjac( np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
     cdef integer leniu     = iu.shape[0]
     cdef integer lenru     = ru.shape[0]
 
+    cdef cu_struct    cus
+    cus.cu = cu.data
+    cus.userfun = <void*> userfg
 
     snjac_( <integer*>    inform.data,
             <integer*>    nf.data,
@@ -434,7 +466,7 @@ def snjac( np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
             <integer*>    mincw.data,
             <integer*>    miniw.data,
             <integer*>    minrw.data,
-            <char*>       cu.data, &lencu,
+            <char*>       &cus, &lencu,
             <integer*>    iu.data, &leniu,
             <doublereal*> ru.data, &lenru,
             <char*>       cw.data, &lencw,

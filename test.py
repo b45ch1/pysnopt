@@ -44,10 +44,13 @@ miniw  = numpy.array([0]*1,   dtype=numpy.int64)
 minrw  = numpy.array([0]*1,   dtype=numpy.int64)
 
 
+def userfun(status, x, needF, F, needG, G, cu, iu, ru):
+	print 'hallo'
+
 snopt.snjac( inform,
              nf,
              n,
-             None,
+             userfun,
              iafun,
              javar,
              lena,
