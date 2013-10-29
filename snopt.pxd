@@ -1,4 +1,4 @@
-## author: Sebastian F. Walter, Manuel Kudruss
+# author: Sebastian F. Walter, Manuel Kudruss
 
 cdef extern from "f2c.h":
     ctypedef int ftnlen
@@ -38,5 +38,27 @@ cdef extern from "snopt.hh":
             ftnlen cw_len)
 
     void sninit_( integer *iPrint, integer *iSumm, char *cw,
-            integer *lencw, integer *iw, integer *leniw,
-            doublereal *rw, integer *lenrw, ftnlen cw_len )
+       integer *lencw, integer *iw, integer *leniw,
+       doublereal *rw, integer *lenrw, ftnlen cw_len )
+
+    void sngeti_( char *buffer, integer *ivalue, integer *inform__,
+       char *cw, integer *lencw, integer *iw,
+       integer *leniw, doublereal *rw, integer *lenrw,
+       ftnlen buffer_len, ftnlen cw_len)
+
+    void sngetr_( char *buffer, doublereal *ivalue, integer *inform__,
+           char *cw, integer *lencw, integer *iw,
+           integer *leniw, doublereal *rw, integer *lenrw,
+           ftnlen buffer_len, ftnlen cw_len)
+
+    void snset_( char *buffer, integer *iprint, integer *isumm,
+       integer *inform__, char *cw, integer *lencw,
+       integer *iw, integer *leniw,
+       doublereal *rw, integer *lenrw,
+       ftnlen buffer_len, ftnlen cw_len)
+
+    void sngetc_( char *buffer, char *ivalue, integer *inform__,
+       char *cw, integer *lencw, integer *iw,
+       integer *leniw, doublereal *rw, integer *lenrw,
+       ftnlen buffer_len, ftnlen ivalue_len, ftnlen cw_len)
+
