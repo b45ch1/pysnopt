@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import print_function
 
 import snopt
 import numpy as np
@@ -240,7 +239,6 @@ def toyusrfg(status, x, needF, neF, F, needG, neG, G, cu, iu, ru):
         neG[0] += 1
         G[neG[0]] = 2*x[1]
         neG[0] += 1
-    return 0
 
 def main():
     lenrw = 20000
@@ -357,7 +355,6 @@ def main():
 
     toy0(INFO, Prob, neF, n, ObjAdd, ObjRow, xlow, xupp,
          Flow, Fupp, x, xstate, Fmul)
-
     # SnoptA will compute the Jacobian by finite-differences.   */
     # The user has the option of calling  snJac  to define the  */
     # coordinate arrays (iAfun,jAvar,A) and (iGfun, jGvar).     */
@@ -368,6 +365,7 @@ def main():
                 x, xlow, xupp, mincw, miniw, minrw,
                 cw, iw, rw, cw, iw, rw)
 
+
     # ------------------------------------------------------------------ */
     # Warn SnoptA that userf does not compute derivatives.               */
     # The parameters iPrt and iSum may refer to the Print and Summary    */
@@ -377,10 +375,9 @@ def main():
     DerOpt = np.array([0], dtype=np.int64)
     iPrt   = np.array([0], dtype=np.int64)
     iSum   = np.array([0], dtype=np.int64)
-    strOpt_s = "Derivative option"
+    strOpt_s = "Derivative option "
     strOpt[:len(strOpt_s)] = list(strOpt_s)
     snopt.snseti(strOpt, DerOpt, iPrt, iSum, INFO, cw, iw, rw)
-
     #     ------------------------------------------------------------------ */
     #     Go for it, using a Cold start.                                     */
     #     ------------------------------------------------------------------ */
@@ -393,7 +390,6 @@ def main():
            x, xstate, xmul, F, Fstate, Fmul,
            INFO, mincw, miniw, minrw,
            nS, nInf, sInf, cw,  iw,  rw, cw,  iw,  rw )
-
 
     print("\nSolving toy1 using first derivatives ...\n")
 
