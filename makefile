@@ -51,3 +51,5 @@ all:
 	$(FC) -shared -s $(FFLAGS) -o libsnopt7.so $< $(FILES) -lgfortran -lblas
 	python setup.py build_ext --inplace
 
+python:
+	python setup.py build_ext --inplace
