@@ -64,7 +64,7 @@ def toy0(inform, Prob, neF, n, ObjAdd, ObjRow, xlow, xupp,
     x[1]    =  1.0
 
 
-def toyusrf(status, x, needF, F, needG, G, cu, iu, ru):
+def toyusrf(status, x, needF, neF, F, needG, neG, G, cu, iu, ru):
 
     """
     ==================================================================
@@ -188,7 +188,7 @@ def toy1( inform, Prob, neF, n,
     neA[0] = 0
 
 
-def toyusrfg(status, x, needF, F, needG, G, cu, iu, ru):
+def toyusrfg(status, x, needF, neF, F, needG, neG, G, cu, iu, ru):
     """
     ==================================================================
     Computes the nonlinear objective and constraint terms for the toy
@@ -210,37 +210,36 @@ def toyusrfg(status, x, needF, F, needG, G, cu, iu, ru):
         F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
 
     if( needG[0]> 0 ):
-        neG = 0
+        neG[0] = 0
         # iGfun[*neG] = 1 */
         # jGvar[*neG] = 1 */
-        G[neG] = 0
+        G[neG[0]] = 0
 
         # iGfun[neG] = 1 */
         # jGvar[neG] = 2 */
-        neG += 1
-        G[neG] = 1.0
-
-        # iGfun[neG] = 2 */
-        # jGvar[neG] = 1 */
-        neG += 1
-        G[neG] = 2*x[0]
-
-        # iGfun[neG] = 2 */
-        # jGvar[neG] = 2 */
-        neG += 1
-        G[neG] = 8*x[1]
-
-        # iGfun[neG] = 3 */
-        # jGvar[neG] = 1 */
-        neG += 1
-        G[neG] = 2*(x[0] - 2)
-
-        # iGfun[neG] = 3 */
-        # jGvar[neG] = 2 */
-        neG += 1
-        G[neG] = 2*x[1]
         neG[0] += 1
+        G[neG[0]] = 1.0
 
+        # iGfun[neG] = 2 */
+        # jGvar[neG] = 1 */
+        neG[0] += 1
+        G[neG[0]] = 2*x[0]
+
+        # iGfun[neG] = 2 */
+        # jGvar[neG] = 2 */
+        neG[0] += 1
+        G[neG[0]] = 8*x[1]
+
+        # iGfun[neG] = 3 */
+        # jGvar[neG] = 1 */
+        neG[0] += 1
+        G[neG[0]] = 2*(x[0] - 2)
+
+        # iGfun[neG] = 3 */
+        # jGvar[neG] = 2 */
+        neG[0] += 1
+        G[neG[0]] = 2*x[1]
+        neG[0] += 1
     return 0
 
 def main():
@@ -394,6 +393,7 @@ def main():
            x, xstate, xmul, F, Fstate, Fmul,
            INFO, mincw, miniw, minrw,
            nS, nInf, sInf, cw,  iw,  rw, cw,  iw,  rw )
+
 
     print("\nSolving toy1 using first derivatives ...\n")
 
