@@ -29,8 +29,11 @@ cdef int callback(integer    *Status,   integer    *n,
     shape[0]  = 1
     status_   = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, Status)
 
-    needF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needF)
-    needG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needG)
+    neF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needF)
+    neG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, needG)
+
+    needF_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neF)
+    needG_    = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, neG)
 
     shape[0]  = leniu[0]
     iu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, iu)
@@ -47,7 +50,7 @@ cdef int callback(integer    *Status,   integer    *n,
     shape[0]  = lenru[0]
     ru_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, ru)
 
-    (<object>cus.userfun)(status_, x_, needF_, F_, needG_, G_, cu_, iu_,  ru_)
+    (<object>cus.userfun)(status_, x_, needF_, neF_, F_, needG_, neG_, G_, cu_, iu_,  ru_)
 
 def check_memory_compatibility():
     assert sizeof(np.int8_t) == sizeof(char), 'sizeof(np.int8_t) != sizeof(char)'
