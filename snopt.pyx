@@ -475,3 +475,56 @@ def snjac( np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
             lencu,
             lencw)
 
+def snopenappend(np.ndarray[np.int64_t, ndim=1, mode='c'] iunit,
+                 np.ndarray[np.int8_t,  ndim=1, mode='c'] name,
+                 np.ndarray[np.int64_t, ndim=1, mode='c'] inform):
+    """
+    """
+
+    cdef integer lenname = name.shape[0]
+
+    snopenappend_(<integer*> iunit.data,
+                  <char*> name.data,
+                  <integer*> inform.data,
+                  lenname)
+
+def snfilewrapper(np.ndarray[np.int8_t,    ndim=1, mode='c'] name,
+                  np.ndarray[np.int64_t,   ndim=1, mode='c'] ispec,
+                  np.ndarray[np.int64_t,   ndim=1, mode='c'] inform,
+                  np.ndarray[np.int8_t,    ndim=1, mode='c'] cw,
+                  np.ndarray[np.int64_t,   ndim=1, mode='c'] iw,
+                  np.ndarray[np.float64_t, ndim=1, mode='c'] rw):
+    """
+    """
+    cdef integer lencw   = cw.shape[0]
+    cdef integer leniw   = iw.shape[0]
+    cdef integer lenrw   = rw.shape[0]
+    cdef integer lenname = name.shape[0]
+
+    snfilewrapper_(<char*> name.data,
+                   <integer*> ispec.data,
+                   <integer*> inform.data,
+                   <char*> cw.data,       &lencw,
+                   <integer*> iw.data,    &leniw,
+                   <doublereal*> rw.data, &lenrw,
+                   lencw,
+                   lenname)
+
+def snclose(np.ndarray[np.int64_t, ndim=1, mode='c'] iunit):
+    """
+    """
+    snclose_(<integer*> iunit.data)
+
+def snopenread(np.ndarray[np.int64_t, ndim=1, mode='c'] iunit,
+               np.ndarray[np.int8_t,  ndim=1, mode='c'] name,
+               np.ndarray[np.int64_t, ndim=1, mode='c'] inform):
+    """
+    """
+
+    cdef integer lenname = name.shape[0]
+
+    snopenread_(<integer*> iunit.data,
+                <char*> name.data,
+                <integer*> inform.data,
+                lenname)
+
