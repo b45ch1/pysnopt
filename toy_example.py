@@ -3,13 +3,9 @@
 import numpy as np
 from __future__ import print_function
 
-def userfun(status, x, needF, F, needG, G, cu, iu, ru):
-    print('hallo')
+def toy0(inform, Prob, neF, n, ObjAdd, ObjRow, xlow, xupp,
+         Flow, upp, x, xstate, Fmul):
 
-def toy0( integer *inform, char *Prob, integer *neF, integer *n, doublereal *ObjAdd,
-  integer *ObjRow, doublereal *xlow, doublereal *xupp,
-  doublereal *Flow, doublereal *Fupp, doublereal *x,
-  integer *xstate, doublereal *Fmul ):
     """
     ==================================================================
     Toy0   defines input data for the toy problem discussed in the
@@ -38,224 +34,214 @@ def toy0( integer *inform, char *Prob, integer *neF, integer *n, doublereal *Obj
 
     ==================================================================
     """
-  # Give the problem a name.  */
+    # Give the problem a name.
+    print('%s %s' %(Prob, 'Toy0'))
 
-  sprintf(Prob,"%s","Toy0")
+    # Assign the dimensions of the constraint Jacobian */
 
-  # Assign the dimensions of the constraint Jacobian */
+    neF[0]    = 3
+    n[0]      = 2
 
-  *neF    = 3
-  *n      = 2
+    ObjRow[0] = 1 # NOTE: Me must add one to mesh with fortran */
+    ObjAdd[0] = 0
 
-  *ObjRow = 1 # NOTE: Me must add one to mesh with fortran */
-  *ObjAdd = 0
+    # Set the upper and lower bounds. */
+    xlow[0]   =   0.0
+    xlow[1]   =  -1e6
+    xupp[0]   =   1e6
+    xupp[1]   =   1e6
+    xstate[0] =   0
+    xstate[1] =   0
 
-  # Set the upper and lower bounds. */
-  xlow[0]   =   0.0  xlow[1] = -1e6
-  xupp[0]   =   1e6  xupp[1] =  1e6
-  xstate[0] =   0    xstate[1] = 0
-
-  Flow[0] = -1e6 Flow[1] = -1e6 Flow[2] = -1e6
-  Fupp[0] =  1e6 Fupp[1] =  4.0 Fupp[2] =  5.0
-
-  x[0]    = 1.0
-  x[1]    = 1.0
-
-
-
-int toyusrf_
-( integer    *Status, integer *n,    doublereal x[],
-  integer    *needF,  integer *neF,  doublereal F[],
-  integer    *needG,  integer *neG,  doublereal G[],
-  char       *cu,     integer *lencu,
-  integer    iu[],    integer *leniu,
-  doublereal ru[],    integer *lenru )
-
-  #     ================================================================== */
-  #     Computes the nonlinear objective and constraint terms for the toy  */
-  #     problem featured in the SnoptA users guide.                        */
-  #     neF = 3, n = 2.                                                    */
-  #                                                                        */
-  #        Minimize                      x(2)                              */
-  #                                                                        */
-  #        subject to   x(1)**2      + 4 x(2)**2  <= 4,                    */
-  #                    (x(1) - 2)**2 +   x(2)**2  <= 5,                    */
-  #                     x(1) >= 0.                                         */
-  #                                                                        */
-  #     ================================================================== */
-
-  F[0] = x[1]
-  F[1] = x[0]*x[0] + 4*x[1]*x[1]
-  F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
-  return 0
+    Flow[0] = -1e6
+    Flow[1] = -1e6
+    Flow[2] = -1e6
+    Fupp[0] =  1e6
+    Fupp[1] =  4.0
+    Fupp[2] =  5.0
+    x[0]    =  1.0
+    x[1]    =  1.0
 
 
-void toy1
-( integer *inform, char *Prob, integer *neF, integer *n,
-  integer *iAfun, integer *jAvar, integer *lenA, integer *neA, doublereal *A,
-  integer *iGfun, integer *jGvar, integer *lenG, integer *neG, doublereal *ObjAdd,
-  integer *ObjRow, doublereal *xlow, doublereal *xupp,
-  doublereal *Flow, doublereal *Fupp, doublereal *x,
-  integer *xstate, doublereal *Fmul)
+def toyusrf(status, x, needF, F, needG, G, cu, iu, ru):
 
-  #     ================================================================== */
-  #     Toy1   defines input data for the toy problem discussed in the     */
-  #     SnoptA Users Guide.                                                */
-  #                                                                        */
-  #        Minimize                      x(2)                              */
-  #                                                                        */
-  #        subject to   x(1)**2      + 4 x(2)**2  <= 4,                    */
-  #                    (x(1) - 2)**2 +   x(2)**2  <= 5,                    */
-  #                     x(1) >= 0.                                         */
-  #                                                                        */
-  #                                                                        */
-  #     On exit:                                                           */
-  #        neF  is the number of objective and constraint functions        */
-  #               (including linear and nonlinear)                         */
-  #        n    is the number of variables.                                */
-  #                                                                        */
-  #                                                                        */
-  #        (iGfun(k),jGvar(k)), k = 1,2,...,neG, define the coordinates    */
-  #             of the nonzero problem derivatives.                        */
-  #             If (iGfun(k),jGvar(k)) = (i,j), G(k) is the ijth element   */
-  #             of the problem vector F(i), i = 0,1,2,...,neF,  with       */
-  #             objective function in position 0 and constraint functions  */
-  #             in positions  1  through  m.                               */
-  #                                                                        */
-  #        (iAfun(k),jAvar(k),a(k)), k = 1,2,...,neA, are the coordinates  */
-  #             of the nonzero constant problem derivatives.               */
-  #                                                                        */
-  #             To keep things simple, no constant elements are set here.  */
-  #                                                                        */
-  #     ================================================================== */
-  # Give the problem a name.  */
+    """
+    ==================================================================
+    Computes the nonlinear objective and constraint terms for the toy
+    problem featured in the SnoptA users guide.
+    neF = 3, n = 2.
 
-  strcpy(Prob,"Toy1")
+      Minimize                      x(2)
 
-  # Assign the dimensions of the constraint Jacobian */
+      subject to   x(1)**2      + 4 x(2)**2  <= 4,
+                  (x(1) - 2)**2 +   x(2)**2  <= 5,
+                   x(1) >= 0.
 
-  *neF    = 3
-  *n      = 2
+    ==================================================================
+    """
 
-  *ObjRow = 1 # NOTE: Me must add one to mesh with fortran */
-  *ObjAdd = 0
-
-  # Set the upper and lower bounds. */
-  xlow[0]   =   0.0  xlow[1] = -1e6
-  xupp[0]   =   1e6  xupp[1] =  1e6
-  xstate[0] =   0    xstate[1] = 0
-
-  Flow[0] = -1e6 Flow[1] = -1e6 Flow[2] = -1e6
-  Fupp[0] =  1e6 Fupp[1] =  4.0 Fupp[2] =  5.0
-  Fmul[0] =    0 Fmul[1] =    0 Fmul[2] =    0
-
-  x[0]    = 1.0
-  x[1]    = 1.0
-
-  *inform = 0
-  *neG    = 0
-  iGfun[*neG] = 1
-  jGvar[*neG] = 1
-
-  *neG    = *neG + 1
-  iGfun[*neG] = 1
-  jGvar[*neG] = 2
-
-  *neG    = *neG + 1
-  iGfun[*neG] = 2
-  jGvar[*neG] = 1
-
-  *neG    = *neG + 1
-  iGfun[*neG] = 2
-  jGvar[*neG] = 2
-
-  *neG    = *neG + 1
-  iGfun[*neG] = 3
-  jGvar[*neG] = 1
-
-  *neG    = *neG + 1
-  iGfun[*neG] = 3
-  jGvar[*neG] = 2
-
-  *neG = *neG + 1
-  # *neG = 6 */
-
-  *neA = 0
-
-
-
-int toyusrfg_
-( integer    *Status, integer *n,    doublereal x[],
-  integer    *needF,  integer *neF,  doublereal F[],
-  integer    *needG,  integer *neG,  doublereal G[],
-  char       *cu,     integer *lencu,
-  integer    iu[],    integer *leniu,
-  doublereal ru[],    integer *lenru )
-
-  #     ==================================================================  */
-  #     Computes the nonlinear objective and constraint terms for the toy   */
-  #     problem featured in the SnoptA users guide.                         */
-  #     neF = 3, n = 2.                                                     */
-  #                                                                         */
-  #        Minimize                      x(2)                               */
-  #                                                                         */
-  #        subject to   x(1)**2      + 4 x(2)**2  <= 4,                     */
-  #                    (x(1) - 2)**2 +   x(2)**2  <= 5,                     */
-  #                     x(1) >= 0.                                          */
-  #                                                                         */
-  #     The triples (g(k),iGfun(k),jGvar(k)), k = 1,2,...,neG, define       */
-  #     the sparsity pattern and values of the nonlinear elements           */
-  #     of the Jacobian.                                                    */
-  #     ==================================================================  */
-
-  if( *needF > 0 )
-    F[0] = x[1] # ! The objective row */
+    F[0] = x[1]
     F[1] = x[0]*x[0] + 4*x[1]*x[1]
     F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
+    return 0
 
 
-  if( *needG > 0 )
-    *neG = 0
-    # iGfun[*neG] = 1 */
-    # jGvar[*neG] = 1 */
-    G[*neG] = 0
+def toy1( inform, Prob, neF, n,
+          iAfun, jAvar, lenA, neA, A,
+          iGfun, jGvar, lenG, neG, ObjAdd,
+          ObjRow, xlow, xupp,
+          Flow, Fupp, x,
+          xstate, Fmul):
 
-    # iGfun[*neG] = 1 */
-    # jGvar[*neG] = 2 */
-    *neG = *neG + 1
-    G[*neG] = 1.0
+    """
+    ==================================================================
+    Toy1   defines input data for the toy problem discussed in the
+    SnoptA Users Guide.
 
-    # iGfun[*neG] = 2 */
-    # jGvar[*neG] = 1 */
-    *neG = *neG + 1
-    G[*neG] = 2*x[0]
+      Minimize                      x(2)
 
-    # iGfun[*neG] = 2 */
-    # jGvar[*neG] = 2 */
-    *neG = *neG + 1
-    G[*neG] = 8*x[1]
+      subject to   x(1)**2      + 4 x(2)**2  <= 4,
+                  (x(1) - 2)**2 +   x(2)**2  <= 5,
+                   x(1) >= 0.
 
-    # iGfun[*neG] = 3 */
-    # jGvar[*neG] = 1 */
-    *neG = *neG + 1
-    G[*neG] = 2*(x[0] - 2)
 
-    # iGfun[*neG] = 3 */
-    # jGvar[*neG] = 2 */
-    *neG = *neG + 1
-    G[*neG] = 2*x[1]
-    *neG = *neG + 1
+    On exit:
+      neF  is the number of objective and constraint functions
+             (including linear and nonlinear)
+      n    is the number of variables.
 
-  return 0
 
-def doublereal(len):
-    return np.zeros((length), dtype=np.float64)
+      (iGfun(k),jGvar(k)), k = 1,2,...,neG, define the coordinates
+           of the nonzero problem derivatives.
+           If (iGfun(k),jGvar(k)) = (i,j), G(k) is the ijth element
+           of the problem vector F(i), i = 0,1,2,...,neF,  with
+           objective function in position 0 and constraint functions
+           in positions  1  through  m.
 
-def integer(len):
-    return np.zeros((length), dtype=np.int64)
+      (iAfun(k),jAvar(k),a(k)), k = 1,2,...,neA, are the coordinates
+           of the nonzero constant problem derivatives.
 
-def char(len):
-    return np.zeros((length), dtype=np.int8)
+           To keep things simple, no constant elements are set here.
+
+    ==================================================================
+    """
+
+
+    # Assign the dimensions of the constraint Jacobian
+
+    neF[0]    = 3
+    n[0]      = 2
+
+    ObjRow[0] = 1 # NOTE: Me must add one to mesh with fortran
+    ObjAdd[0] = 0
+
+    # Set the upper and lower bounds
+    xlow[0]   =   0.0
+    xlow[1]   = -1e6
+    xupp[0]   =   1e6
+    xupp[1]   =  1e6
+    xstate[0] =   0
+    xstate[1] =   0
+
+    Flow[0] = -1e6
+    Flow[1] = -1e6
+    Flow[2] = -1e6
+    Fupp[0] =  1e6
+    Fupp[1] =  4.0
+    Fupp[2] =  5.0
+    Fmul[0] =    0
+    Fmul[1] =    0
+    Fmul[2] =    0
+
+    x[0]    = 1.0
+    x[1]    = 1.0
+
+    inform[0] = 0
+    neG[0]    = 0
+    iGfun[neG[0]] = 1
+    jGvar[neG[0]] = 1
+
+    neG[0]       += 1
+    iGfun[neG[0]] = 1
+    jGvar[neG[0]] = 2
+
+    neG[0]     += 1
+    iGfun[neG[0]] = 2
+    jGvar[neG[0]] = 1
+
+    neG[0]     += 1
+    iGfun[neG[0]] = 2
+    jGvar[neG[0]] = 2
+
+    neG[0]       += 1
+    iGfun[neG[0]] = 3
+    jGvar[neG[0]] = 1
+
+    neG[0]       += 1
+    iGfun[neG[0]] = 3
+    jGvar[neG[0]] = 2
+
+    neG[0] += 1
+    # neG[0] = 6
+
+    neA[0] = 0
+
+
+def toyusrfg_(status, x, needF, F, needG, G, cu, iu, ru):
+    """
+    ==================================================================
+    Computes the nonlinear objective and constraint terms for the toy
+    problem featured in the SnoptA users guide.
+    neF = 3, n = 2.
+       Minimize                      x(2)
+       subject to   x(1)**2      + 4 x(2)**2  <= 4,
+                   (x(1) - 2)**2 +   x(2)**2  <= 5,
+                    x(1) >= 0.
+    The triples (g(k),iGfun(k),jGvar(k)), k = 1,2,...,neG, define
+    the sparsity pattern and values of the nonlinear elements
+    of the Jacobian.
+    ==================================================================
+    """
+
+    if( needF[0] > 0 ):
+        F[0] = x[1] # ! The objective row */
+        F[1] = x[0]*x[0] + 4*x[1]*x[1]
+        F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
+
+
+    if( needG[0]> 0 ):
+        neG[0]= 0
+        # iGfun[*neG] = 1 */
+        # jGvar[*neG] = 1 */
+        G[neG[0]] = 0
+
+        # iGfun[neG[0]] = 1 */
+        # jGvar[neG[0]] = 2 */
+        neG[0] += 1
+        G[neG[0]] = 1.0
+
+        # iGfun[neG[0]] = 2 */
+        # jGvar[neG[0]] = 1 */
+        neG[0] += 1
+        G[neG[0]] = 2*x[0]
+
+        # iGfun[neG[0]] = 2 */
+        # jGvar[neG[0]] = 2 */
+        neG[0] += 1
+        G[neG[0]] = 8*x[1]
+
+        # iGfun[neG[0]] = 3 */
+        # jGvar[neG[0]] = 1 */
+        neG[0] += 1
+        G[neG[0]] = 2*(x[0] - 2)
+
+        # iGfun[neG[0]] = 3 */
+        # jGvar[neG[0]] = 2 */
+        neG[0] += 1
+        G[neG[0]] = 2*x[1]
+        neG[0] += 1
+
+    return 0
 
 def main():
   lenrw = 20000
