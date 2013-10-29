@@ -23,7 +23,7 @@ cdef int callback(integer    *Status,   integer    *n,
                   doublereal *ru,       integer    *lenru):
 
     cus = <cu_struct*>cu
-    cu_ = cus.cu
+    cu_p = cus.cu
     userfun_ = cus.userfun
 
     cdef np.npy_intp shape[1]
@@ -38,7 +38,7 @@ cdef int callback(integer    *Status,   integer    *n,
     iu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, iu)
 
     shape[0]  = lencu[0]
-    cu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT8, cu)
+    cu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT8, cu_p)
 
     shape[0]  = n[0]
     x_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, x)
