@@ -9,8 +9,9 @@ cimport snopt
 
 np.import_array()
 
+
 cdef struct cu_struct:
-    char* cu
+    char  cu[16000]
     void* userfun
 
 cdef int callback(integer    *Status,   integer    *n,
@@ -23,9 +24,6 @@ cdef int callback(integer    *Status,   integer    *n,
                   doublereal *ru,       integer    *lenru):
 
     cus = <cu_struct*>cu
-    cu_p = cus.cu
-    userfun_ = cus.userfun
-
     cdef np.npy_intp shape[1]
 
     shape[0]  = 1
@@ -38,7 +36,7 @@ cdef int callback(integer    *Status,   integer    *n,
     iu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT64, iu)
 
     shape[0]  = lencu[0]
-    cu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT8, cu_p)
+    cu_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_INT8, cus.cu)
 
     shape[0]  = n[0]
     x_        = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, x)
@@ -49,7 +47,7 @@ cdef int callback(integer    *Status,   integer    *n,
     shape[0]  = lenru[0]
     ru_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, ru)
 
-    (<object>userfun_)(status_, x_, needF_, F_, needG_, G_, cu_, iu_,  ru_)
+    (<object>cus.userfun)(status_, x_, needF_, F_, needG_, G_, cu_, iu_,  ru_)
 
 def check_memory_compatibility():
     assert sizeof(np.int8_t) == sizeof(char), 'sizeof(np.int8_t) != sizeof(char)'
@@ -123,8 +121,9 @@ def snopta(np.ndarray[np.int8_t,     ndim=1, mode='c'] start,
     cdef integer lenfnames = fnames.shape[0]
 
 
-    cdef cu_struct    cus
-    cus.cu = cu.data
+    cdef cu_struct cus
+    assert sizeof(cus.cu) >= <size_t>lencu, '%d >= %d, please change length cu_struct.cu and recompile the interface'%(sizeof(cus.cu), <size_t>lencu)
+    memcpy(cus.cu, cu.data, lencu*sizeof(char));
     cus.userfun = <void*> userfg
 
     snopta_(<integer*> start.data,
@@ -444,7 +443,8 @@ def snjac( np.ndarray[np.int64_t,    ndim=1, mode='c'] inform,
     cdef integer lenru     = ru.shape[0]
 
     cdef cu_struct    cus
-    cus.cu = cu.data
+    assert sizeof(cus.cu) >= <size_t>lencu, '%d >= %d, please change length cu_struct.cu and recompile the interface'%(sizeof(cus.cu), <size_t>lencu)
+    memcpy(cus.cu, cu.data, lencu*sizeof(char));
     cus.userfun = <void*> userfg
 
     snjac_( <integer*>    inform.data,
