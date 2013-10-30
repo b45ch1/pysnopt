@@ -79,10 +79,11 @@ def toyusrf(status, x, needF, neF, F, needG, neG, G, cu, iu, ru):
 
     ==================================================================
     """
-
-    F[0] = x[1]
-    F[1] = x[0]*x[0] + 4*x[1]*x[1]
-    F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
+    # print 'called toyusrf'
+    if( needF[0] != 0 ):
+        F[0] = x[1]
+        F[1] = x[0]*x[0] + 4*x[1]*x[1]
+        F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
     return 0
 
 
@@ -165,11 +166,11 @@ def toy1( inform, Prob, neF, n,
     iGfun[neG[0]] = 1
     jGvar[neG[0]] = 2
 
-    neG[0]     += 1
+    neG[0]       += 1
     iGfun[neG[0]] = 2
     jGvar[neG[0]] = 1
 
-    neG[0]     += 1
+    neG[0]       += 1
     iGfun[neG[0]] = 2
     jGvar[neG[0]] = 2
 
@@ -203,12 +204,17 @@ def toyusrfg(status, x, needF, neF, F, needG, neG, G, cu, iu, ru):
     ==================================================================
     """
 
-    if( needF[0] > 0 ):
+    # print 'called toyusrfg'
+
+    # print 'needF=', needF
+    # print 'needG=', needG
+
+    if( needF[0] != 0 ):
         F[0] = x[1] # ! The objective row */
         F[1] = x[0]*x[0] + 4*x[1]*x[1]
         F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1]
 
-    if( needG[0]> 0 ):
+    if( needG[0] != 0 ):
         neG[0] = 0
         # iGfun[*neG] = 1 */
         # jGvar[*neG] = 1 */
@@ -240,18 +246,20 @@ def toyusrfg(status, x, needF, neF, F, needG, neG, G, cu, iu, ru):
         G[neG[0]] = 2*x[1]
         neG[0] += 1
 
+
 def main():
-    minrw = np.zeros((1), dtype=np.int64)
-    miniw = np.zeros((1), dtype=np.int64)
-    mincw = np.zeros((1), dtype=np.int64)
+    snopt.check_memory_compatibility()
+    minrw = np.zeros((1), dtype=np.int32)
+    miniw = np.zeros((1), dtype=np.int32)
+    mincw = np.zeros((1), dtype=np.int32)
 
     rw = np.zeros((10000,), dtype=np.float64)
-    iw = np.zeros((10000,), dtype=np.int64)
+    iw = np.zeros((10000,), dtype=np.int32)
     cw = np.zeros((8*500,), dtype=np.character)
 
-    Cold  = np.array([0], dtype=np.int64)
-    Basis = np.array([1], dtype=np.int64)
-    Warm  = np.array([2], dtype=np.int64)
+    Cold  = np.array([0], dtype=np.int32)
+    Basis = np.array([1], dtype=np.int32)
+    Warm  = np.array([2], dtype=np.int32)
 
     x    = np.zeros((2,), dtype=np.float64)
     xlow = np.zeros((2,), dtype=np.float64)
@@ -264,33 +272,33 @@ def main():
 
     ObjAdd = np.zeros((1,), dtype=np.float64)
 
-    xstate = np.zeros((2,), dtype=np.int64)
-    Fstate = np.zeros((3,), dtype=np.int64)
+    xstate = np.zeros((2,), dtype=np.int32)
+    Fstate = np.zeros((3,), dtype=np.int32)
 
-    INFO   = np.zeros((1,), dtype=np.int64)
-    ObjRow = np.zeros((1,), dtype=np.int64)
-    n      = np.zeros((1,), dtype=np.int64)
-    neF    = np.zeros((1,), dtype=np.int64)
+    INFO   = np.zeros((1,), dtype=np.int32)
+    ObjRow = np.zeros((1,), dtype=np.int32)
+    n      = np.zeros((1,), dtype=np.int32)
+    neF    = np.zeros((1,), dtype=np.int32)
 
-    lenA   = np.zeros((1,), dtype=np.int64)
+    lenA   = np.zeros((1,), dtype=np.int32)
     lenA[0] = 10
 
-    iAfun = np.zeros((10,), dtype=np.int64)
-    jAvar = np.zeros((10,), dtype=np.int64)
+    iAfun = np.zeros((10,), dtype=np.int32)
+    jAvar = np.zeros((10,), dtype=np.int32)
 
     A     = np.zeros((1,), dtype=np.float64)
 
-    lenG   = np.zeros((1,), dtype=np.int64)
+    lenG   = np.zeros((1,), dtype=np.int32)
     lenG[0] = 10
 
-    iGfun = np.zeros((10,), dtype=np.int64)
-    jGvar = np.zeros((10,), dtype=np.int64)
+    iGfun = np.zeros((10,), dtype=np.int32)
+    jGvar = np.zeros((10,), dtype=np.int32)
 
-    neA = np.zeros((1,), dtype=np.int64)
-    neG = np.zeros((1,), dtype=np.int64)
+    neA = np.zeros((1,), dtype=np.int32)
+    neG = np.zeros((1,), dtype=np.int32)
 
-    nxname = np.zeros((1,), dtype=np.int64)
-    nFname = np.zeros((1,), dtype=np.int64)
+    nxname = np.zeros((1,), dtype=np.int32)
+    nFname = np.zeros((1,), dtype=np.int32)
 
     nxname[0] = 1
     nFname[0] = 1
@@ -299,9 +307,9 @@ def main():
     Fnames = np.zeros((1*8,), dtype=np.character)
     Prob   = np.zeros((200*8,), dtype=np.character)
 
-    iSpecs   = np.zeros((1,), dtype=np.int64)
-    iSumm    = np.zeros((1,), dtype=np.int64)
-    iPrint   = np.zeros((1,), dtype=np.int64)
+    iSpecs   = np.zeros((1,), dtype=np.int32)
+    iSumm    = np.zeros((1,), dtype=np.int32)
+    iPrint   = np.zeros((1,), dtype=np.int32)
 
     iSpecs[0] = 4
     iSumm [0] = 6
@@ -310,15 +318,15 @@ def main():
     printname = np.zeros((200*8,), dtype=np.character)
     specname  = np.zeros((200*8,), dtype=np.character)
 
-    nS   = np.zeros((1,), dtype=np.int64)
-    nInf = np.zeros((1,), dtype=np.int64)
+    nS   = np.zeros((1,), dtype=np.int32)
+    nInf = np.zeros((1,), dtype=np.int32)
 
     sInf = np.zeros((1,), dtype=np.float64)
 
-    DerOpt     = np.zeros((1,), dtype=np.int64)
-    Major      = np.zeros((1,), dtype=np.int64)
-    iSum       = np.zeros((1,), dtype=np.int64)
-    iPrt       = np.zeros((1,), dtype=np.int64)
+    DerOpt     = np.zeros((1,), dtype=np.int32)
+    Major      = np.zeros((1,), dtype=np.int32)
+    iSum       = np.zeros((1,), dtype=np.int32)
+    iPrt       = np.zeros((1,), dtype=np.int32)
     strOpt     = np.zeros((200*8,), dtype=np.character)
 
     print("\nSolving toy0 without first derivatives ...\n")
@@ -338,7 +346,6 @@ def main():
     # ================================================================== */
 
     snopt.sninit(iPrint, iSumm, cw, iw, rw)
-
     # Set up the problem to be solved.                       */
     # No derivatives are set in this case.                   */
     # NOTE: To mesh with Fortran style coding,               */
@@ -364,15 +371,17 @@ def main():
     # file respectively.  Setting them to 0 suppresses printing.         */
     # ------------------------------------------------------------------ */
 
-    DerOpt = np.array([0], dtype=np.int64)
-    iPrt   = np.array([0], dtype=np.int64)
-    iSum   = np.array([0], dtype=np.int64)
+    DerOpt = np.array([0], dtype=np.int32)
+    iPrt   = np.array([0], dtype=np.int32)
+    iSum   = np.array([0], dtype=np.int32)
     strOpt_s = "Derivative option "
     strOpt[:len(strOpt_s)] = list(strOpt_s)
-    snopt.snseti(strOpt, DerOpt, iPrt, iSum, INFO, cw, iw, rw)
+
+    # snopt.snseti(strOpt, DerOpt, iPrt, iSum, INFO, cw, iw, rw)
     #     ------------------------------------------------------------------ */
     #     Go for it, using a Cold start.                                     */
     #     ------------------------------------------------------------------ */
+
 
     snopt.snopta(Cold, neF, n, nxname, nFname,
            ObjAdd, ObjRow, Prob, toyusrf,
@@ -391,27 +400,26 @@ def main():
          ObjAdd, ObjRow, xlow, xupp,
          Flow, Fupp, x, xstate, Fmul)
 
-    # Read in specs file (optional) */
-    # snfilewrapper_ will open the specs file, fortran style, */
-    # then call snspec_ to read in specs.                        */
+    # Read in specs file (optional)
+    # snfilewrapper_ will open the specs file, fortran style,
+    # then call snspec_ to read in specs.
 
     snopt.snfilewrapper(specname, iSpecs, INFO, cw, iw, rw)
 
     if INFO[0] != 101:
         print("Warning: trouble reading specs file %s \n"%(specname))
 
-    # Specify any user options not set in the Specs file. */
+    # Specify any user options not set in the Specs file.
     DerOpt[0] = 1
     snopt.snseti(strOpt, DerOpt, iPrint, iSumm, INFO, cw, iw, rw)
 
-    Major = np.array([250], dtype=np.int64)
+    Major = np.array([250], dtype=np.int32)
     strOpt_s = "Major Iteration limit"
     strOpt[:len(strOpt_s)] = list(strOpt_s)
-    snopt.snseti( strOpt, Major, iPrint, iSumm, INFO, cw, iw, rw)
-
-    # ------------------------------------------------------------------ */
-    # Solve the problem again, this time with derivatives specified.     */
-    # ------------------------------------------------------------------ */
+    # snopt.snseti( strOpt, Major, iPrint, iSumm, INFO, cw, iw, rw)
+    # ------------------------------------------------------------------
+    # Solve the problem again, this time with derivatives specified.
+    # ------------------------------------------------------------------
 
     snopt.snopta(Cold, neF, n, nxname, nFname,
            ObjAdd, ObjRow, Prob, toyusrfg,

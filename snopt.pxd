@@ -2,17 +2,18 @@
 
 cdef extern from "stdio.h":
     void * memcpy ( void * destination, const void * source, size_t num )
+    int printf ( const char * format, ... )
 
 cdef extern from "f2c.h":
     ctypedef int ftnlen
-    ctypedef long int integer
-    ctypedef unsigned long int uinteger
+    ctypedef int integer
+    ctypedef unsigned int uinteger
     ctypedef char *address
-    ctypedef short int shortint
+    ctypedef int shortint
     ctypedef float real
-    ctypedef double doublereal
-    ctypedef long int logical
-    ctypedef short int shortlogical
+    ctypedef float doublereal
+    ctypedef int logical
+    ctypedef int shortlogical
     ctypedef char logical1
     ctypedef char integer1
 

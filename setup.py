@@ -15,7 +15,7 @@ BASEDIR = os.path.dirname(BASEDIR)
 extra_params = {}
 extra_params['include_dirs'] = [
     '/usr/include',
-    os.path.join(BASEDIR, 'f2c/src'),
+    # os.path.join(BASEDIR, 'f2c/src'),
     os.path.join(BASEDIR, 'cppsrc'),
     np.get_include()]
 extra_params['extra_compile_args'] = ["-O2", "-g"]
