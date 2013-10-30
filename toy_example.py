@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import print_function
 
 import snopt
 import numpy as np
@@ -241,8 +240,6 @@ def toyusrfg(status, x, needF, neF, F, needG, neG, G, cu, iu, ru):
         G[neG[0]] = 2*x[1]
         neG[0] += 1
 
-    return 0
-
 def main():
     minrw = np.zeros((1), dtype=np.int64)
     miniw = np.zeros((1), dtype=np.int64)
@@ -351,20 +348,15 @@ def main():
 
     toy0(INFO, Prob, neF, n, ObjAdd, ObjRow, xlow, xupp,
          Flow, Fupp, x, xstate, Fmul)
-
     # SnoptA will compute the Jacobian by finite-differences.   */
     # The user has the option of calling  snJac  to define the  */
     # coordinate arrays (iAfun,jAvar,A) and (iGfun, jGvar).     */
-
-    print('neG: %d'%(neG,))
 
     snopt.snjac(INFO, neF, n, toyusrf,
                 iAfun, jAvar, lenA, neA, A,
                 iGfun, jGvar, lenG, neG,
                 x, xlow, xupp, mincw, miniw, minrw,
                 cw, iw, rw, cw, iw, rw)
-
-    print('neG: %d'%(neG,))
 
     # ------------------------------------------------------------------ */
     # Warn SnoptA that userf does not compute derivatives.               */
@@ -375,10 +367,9 @@ def main():
     DerOpt = np.array([0], dtype=np.int64)
     iPrt   = np.array([0], dtype=np.int64)
     iSum   = np.array([0], dtype=np.int64)
-    strOpt_s = "Derivative option"
+    strOpt_s = "Derivative option "
     strOpt[:len(strOpt_s)] = list(strOpt_s)
     snopt.snseti(strOpt, DerOpt, iPrt, iSum, INFO, cw, iw, rw)
-
     #     ------------------------------------------------------------------ */
     #     Go for it, using a Cold start.                                     */
     #     ------------------------------------------------------------------ */
@@ -392,8 +383,6 @@ def main():
            INFO, mincw, miniw, minrw,
            nS, nInf, sInf, cw,  iw,  rw, cw,  iw,  rw )
 
-    print('neG: %d'%(neG,))
-
     print("\nSolving toy1 using first derivatives ...\n")
 
     toy1(INFO, Prob, neF, n,
@@ -401,8 +390,6 @@ def main():
          iGfun, jGvar, lenG, neG,
          ObjAdd, ObjRow, xlow, xupp,
          Flow, Fupp, x, xstate, Fmul)
-
-    print('neG: %d'%(neG,))
 
     # Read in specs file (optional) */
     # snfilewrapper_ will open the specs file, fortran style, */
@@ -434,8 +421,6 @@ def main():
            x, xstate, xmul, F, Fstate, Fmul,
            INFO, mincw, miniw, minrw,
            nS, nInf, sInf, cw, iw, rw, cw, iw, rw)
-
-    print('neG: %d'%(neG,))
 
     snopt.snclose(iPrint)
     snopt.snclose(iSpecs)
