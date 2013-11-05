@@ -17,6 +17,9 @@ cdef extern from "f2c.h":
     ctypedef char logical1
     ctypedef char integer1
 
+cdef extern from "string.h":
+    size_t strlen(const char * str)
+
 cdef extern from "snopt.hh":
     ctypedef int (*My_fp)( integer *Status, integer *n,
             doublereal x[],     integer *needF,

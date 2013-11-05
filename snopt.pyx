@@ -148,6 +148,8 @@ def snopta(np.ndarray[np.int32_t,    ndim=1, mode='c'] start,
     cdef integer lenxnames = xnames.shape[0]
     cdef integer lenfnames = fnames.shape[0]
 
+    cdef integer prob_len   = strlen(prob.data)
+
 
     cdef cu_struct cus
     assert sizeof(cus.cu) >= <size_t>lencu, '%d >= %d, please change length cu_struct.cu and recompile the interface'%(sizeof(cus.cu), <size_t>lencu)
@@ -197,14 +199,12 @@ def snopta(np.ndarray[np.int32_t,    ndim=1, mode='c'] start,
             <char*> cw.data,       &lencw,
             <integer*> iw.data,    &leniw,
             <doublereal*> rw.data, &lenrw,
-            lenprob,
+            prob_len,
             lenxnames,
             lenfnames,
             lencu,
             lencw
             )
-
-
 
 def sninit(np.ndarray[np.int32_t,     ndim=1, mode='c'] iPrint,
            np.ndarray[np.int32_t,     ndim=1, mode='c'] iSumm,
@@ -218,16 +218,13 @@ def sninit(np.ndarray[np.int32_t,     ndim=1, mode='c'] iPrint,
     cdef integer lencw = cw.shape[0]
     cdef integer leniw = iw.shape[0]
     cdef integer lenrw = rw.shape[0]
-    cdef ftnlen str_len = 8
 
     sninit_( <integer*> iPrint.data,
              <integer*> iSumm.data,
              <char*> cw.data, &lencw,
              <integer*> iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
-             str_len )
-
-    return None
+             lencw )
 
 def sngeti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
            np.ndarray[np.int32_t,    ndim=1, mode='c'] ivalue,
@@ -251,7 +248,7 @@ def sngeti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
     cdef integer lencw = cw.shape[0]
     cdef integer leniw = iw.shape[0]
     cdef integer lenrw = rw.shape[0]
-
+    cdef integer bu_len   = strlen(bu.data)
 
     sngeti_( <char*>       bu.data,
              <integer*>    ivalue.data,
@@ -259,7 +256,7 @@ def sngeti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
              <char*>       cw.data, &lencw,
              <integer*>    iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
-             lenbu, lencw)
+             bu_len, lencw)
 
 def sngetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
            np.ndarray[np.float64_t,  ndim=1, mode='c'] rvalue,
@@ -274,6 +271,7 @@ def sngetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
     cdef integer lencw = cw.shape[0]
     cdef integer leniw = iw.shape[0]
     cdef integer lenrw = rw.shape[0]
+    cdef integer bu_len   = strlen(bu.data)
 
     sngetr_( <char*>       bu.data,
              <doublereal*> rvalue.data,
@@ -281,7 +279,7 @@ def sngetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
              <char*>       cw.data, &lencw,
              <integer*>    iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
-             lenbu, lencw)
+             bu_len, lencw)
 
 def snset(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
           np.ndarray[np.int32_t,    ndim=1, mode='c'] iprint,
@@ -297,6 +295,7 @@ def snset(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
     cdef integer lencw = cw.shape[0]
     cdef integer leniw = iw.shape[0]
     cdef integer lenrw = rw.shape[0]
+    cdef integer bu_len   = strlen(bu.data)
 
     snset_( <char*>        bu.data,
             <integer*>     iprint.data,
@@ -305,10 +304,10 @@ def snset(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
             <char*>        cw.data, &lencw,
             <integer*>     iw.data, &leniw,
             <doublereal*>  rw.data, &lenrw,
-            lenbu, lencw)
+            bu_len, lencw)
 
 def sngetc(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
-           np.ndarray[np.int8_t,     ndim=1, mode='c'] ivalue,
+           np.ndarray[np.int8_t,     ndim=1, mode='c'] cvalue,
            np.ndarray[np.int32_t,    ndim=1, mode='c'] inform,
            np.ndarray[np.int8_t,     ndim=1, mode='c'] cw,
            np.ndarray[np.int32_t,    ndim=1, mode='c'] iw,
@@ -316,19 +315,21 @@ def sngetc(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
 
     check_cw_iw_rw(cw, iw, rw)
 
-    cdef integer lenbu     = bu.shape[0]
-    cdef integer lencw     = cw.shape[0]
-    cdef integer leniw     = iw.shape[0]
-    cdef integer lenrw     = rw.shape[0]
-    cdef integer lenivalue = ivalue.shape[0]
+    cdef integer lenbu       = bu.shape[0]
+    cdef integer lencw       = cw.shape[0]
+    cdef integer leniw       = iw.shape[0]
+    cdef integer lenrw       = rw.shape[0]
+    cdef integer lencvalue   = cvalue.shape[0]
+    cdef integer bu_len      = strlen(bu.data)
+    cdef integer cvalue_len  = strlen(cvalue.data)
 
     sngetc_( <char*>       bu.data,
-             <char*>       ivalue.data,
+             <char*>       cvalue.data,
              <integer*>    inform.data,
              <char*>       cw.data, &lencw,
              <integer*>    iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
-             lenbu, lenivalue, lencw)
+             bu_len, cvalue_len, lencw)
 
 def snseti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
            np.ndarray[np.int32_t,    ndim=1, mode='c'] ivalue,
@@ -345,6 +346,7 @@ def snseti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
     cdef integer lencw     = cw.shape[0]
     cdef integer leniw     = iw.shape[0]
     cdef integer lenrw     = rw.shape[0]
+    cdef integer bu_len    = strlen(bu.data)
 
     snseti_( <char*>       bu.data,
              <integer*>    ivalue.data,
@@ -354,7 +356,7 @@ def snseti(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
              <char*>       cw.data, &lencw,
              <integer*>    iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
-             lenbu, lencw)
+             bu_len, lencw)
 
 def snsetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
            np.ndarray[np.float64_t,  ndim=1, mode='c'] rvalue,
@@ -371,6 +373,7 @@ def snsetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
     cdef integer lencw     = cw.shape[0]
     cdef integer leniw     = iw.shape[0]
     cdef integer lenrw     = rw.shape[0]
+    cdef integer bu_len    = strlen(bu.data)
 
     snsetr_( <char*>       bu.data,
              <doublereal*> rvalue.data,
@@ -380,7 +383,7 @@ def snsetr(np.ndarray[np.int8_t,     ndim=1, mode='c'] bu,
              <char*>       cw.data, &lencw,
              <integer*>    iw.data, &leniw,
              <doublereal*> rw.data, &lenrw,
-             lenbu, lencw)
+             bu_len, lencw)
 
 def snspec(np.ndarray[np.int32_t,    ndim=1, mode='c'] ispecs,
            np.ndarray[np.int32_t,    ndim=1, mode='c'] inform,
@@ -510,12 +513,12 @@ def snopenappend(np.ndarray[np.int32_t, ndim=1, mode='c'] iunit,
     """
     """
 
-    cdef integer lenname = name.shape[0]
+    cdef integer name_len = strlen(name.data)
 
     snopenappend_(<integer*> iunit.data,
                   <char*> name.data,
                   <integer*> inform.data,
-                  lenname)
+                  name_len)
 
 def snfilewrapper(np.ndarray[np.int8_t,    ndim=1, mode='c'] name,
                   np.ndarray[np.int32_t,   ndim=1, mode='c'] ispec,
@@ -525,10 +528,11 @@ def snfilewrapper(np.ndarray[np.int8_t,    ndim=1, mode='c'] name,
                   np.ndarray[np.float64_t, ndim=1, mode='c'] rw):
     """
     """
-    cdef integer lencw   = cw.shape[0]
-    cdef integer leniw   = iw.shape[0]
-    cdef integer lenrw   = rw.shape[0]
-    cdef integer lenname = name.shape[0]
+    cdef integer lencw    = cw.shape[0]
+    cdef integer leniw    = iw.shape[0]
+    cdef integer lenrw    = rw.shape[0]
+    cdef integer name_len = strlen(name.data)
+
 
     snfilewrapper_(<char*> name.data,
                    <integer*> ispec.data,
@@ -536,8 +540,8 @@ def snfilewrapper(np.ndarray[np.int8_t,    ndim=1, mode='c'] name,
                    <char*> cw.data,       &lencw,
                    <integer*> iw.data,    &leniw,
                    <doublereal*> rw.data, &lenrw,
-                   lencw,
-                   lenname)
+                   name_len,
+                   lencw)
 
 def snclose(np.ndarray[np.int32_t, ndim=1, mode='c'] iunit):
     """
@@ -550,10 +554,10 @@ def snopenread(np.ndarray[np.int32_t, ndim=1, mode='c'] iunit,
     """
     """
 
-    cdef integer lenname = name.shape[0]
+    cdef integer name_len = strlen(name.data)
 
     snopenread_(<integer*> iunit.data,
                 <char*> name.data,
                 <integer*> inform.data,
-                lenname)
+                name_len)
 

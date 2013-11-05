@@ -374,10 +374,10 @@ def main():
     DerOpt = np.array([0], dtype=np.int32)
     iPrt   = np.array([0], dtype=np.int32)
     iSum   = np.array([0], dtype=np.int32)
-    strOpt_s = "Derivative option "
+    strOpt_s = "Derivative option"
     strOpt[:len(strOpt_s)] = list(strOpt_s)
 
-    # snopt.snseti(strOpt, DerOpt, iPrt, iSum, INFO, cw, iw, rw)
+    snopt.snseti(strOpt, DerOpt, iPrt, iSum, INFO, cw, iw, rw)
     #     ------------------------------------------------------------------ */
     #     Go for it, using a Cold start.                                     */
     #     ------------------------------------------------------------------ */
@@ -416,7 +416,7 @@ def main():
     Major = np.array([250], dtype=np.int32)
     strOpt_s = "Major Iteration limit"
     strOpt[:len(strOpt_s)] = list(strOpt_s)
-    # snopt.snseti( strOpt, Major, iPrint, iSumm, INFO, cw, iw, rw)
+    snopt.snseti( strOpt, Major, iPrint, iSumm, INFO, cw, iw, rw)
     # ------------------------------------------------------------------
     # Solve the problem again, this time with derivatives specified.
     # ------------------------------------------------------------------
