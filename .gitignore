@@ -2,6 +2,11 @@
 .svn*
 build/
 
+
 *.so
 *.c
+*.cpp
+fort.*
+snto
+*.out
 
