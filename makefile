@@ -1,6 +1,6 @@
-# Makefile for the SNOPT7 library
-# by Stefan Koerkel, 2011
-# modified by Sebastian Walter, 2013
+# This file is part of pysnopt, a Python interface to SNOPT.
+# Copyright (C) 2013  Manuel Kudruss, Sebastian F. Walter
+# License: GPL v3, see LICENSE.txt for details.
 
 .SUFFIXES:
 .SUFFIXES: .so .o. f
@@ -53,3 +53,10 @@ all:
 
 python:
 	python setup.py build_ext --inplace
+
+clean:
+	rm -f *.so
+	rm -f fort.*
+	rm -f *.c
+	rm -f *.cpp
+	rm -f *.out

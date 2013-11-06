@@ -1,3 +1,7 @@
+# This file is part of pysnopt, a Python interface to SNOPT.
+# Copyright (C) 2013  Manuel Kudruss, Sebastian F. Walter
+# License: GPL v3, see LICENSE.txt for details.
+
 import snopt
 import numpy
 

@@ -1,4 +1,6 @@
-# author of this file: Sebastian F. Walter, Manuel Kudruss
+# This file is part of pysnopt, a Python interface to SNOPT.
+# Copyright (C) 2013  Manuel Kudruss, Sebastian F. Walter
+# License: GPL v3, see LICENSE.txt for details.
 
 import numpy as np
 cimport numpy as np

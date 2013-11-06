@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-# author: Sebastian F. Walter, Manuel Kudruss
+# This file is part of pysnopt, a Python interface to SNOPT.
+# Copyright (C) 2013  Manuel Kudruss, Sebastian F. Walter
+# License: GPL v3, see LICENSE.txt for details.
 
 from distutils.core import setup
 from distutils.extension import Extension
