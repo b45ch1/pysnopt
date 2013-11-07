@@ -286,16 +286,16 @@ def main():
     lenA   = np.zeros((1,), dtype=np.int32)
     lenA[0] = 10
 
-    iAfun = np.zeros((10,), dtype=np.int32)
-    jAvar = np.zeros((10,), dtype=np.int32)
+    iAfun = np.zeros((lenA[0],), dtype=np.int32)
+    jAvar = np.zeros((lenA[0],), dtype=np.int32)
 
-    A     = np.zeros((1,), dtype=np.float64)
+    A     = np.zeros((lenA[0],), dtype=np.float64)
 
     lenG   = np.zeros((1,), dtype=np.int32)
     lenG[0] = 10
 
-    iGfun = np.zeros((10,), dtype=np.int32)
-    jGvar = np.zeros((10,), dtype=np.int32)
+    iGfun = np.zeros((lenG[0],), dtype=np.int32)
+    jGvar = np.zeros((lenG[0],), dtype=np.int32)
 
     neA = np.zeros((1,), dtype=np.int32)
     neG = np.zeros((1,), dtype=np.int32)
