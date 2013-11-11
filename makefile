@@ -48,7 +48,7 @@ FILES     = $(PWD)/../src/sqopt.f \
 		    $(PWD)/../cppsrc/snfilewrapper.f
 
 all:
-	$(FC) -shared -s $(FFLAGS) -o libsnopt7.so $< $(FILES) -lgfortran -lblas
+	$(FC) -shared -s $(FFLAGS) -o libpysnopt7.so $< $(FILES) -lgfortran -lblas
 	python setup.py build_ext --inplace
 
 python:

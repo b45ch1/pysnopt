@@ -24,7 +24,7 @@ extra_params['extra_compile_args'] = ["-O2", "-g"]
 extra_params['extra_link_args'] = ["-Wl,-O1", "-Wl,--as-needed"]
 
 extra_params = extra_params.copy()
-extra_params['libraries'] = ['snopt7']
+extra_params['libraries'] = ['pysnopt7']
 
 extra_params['library_dirs'] = [os.path.join(BASEDIR, 'python')]
 extra_params['language'] = 'c++'
