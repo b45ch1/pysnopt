@@ -2,6 +2,7 @@
 # Copyright (C) 2013  Manuel Kudruss, Sebastian F. Walter
 # License: GPL v3, see LICENSE.txt for details.
 
+import traceback
 import numpy as np
 cimport numpy as np
 
@@ -87,7 +88,12 @@ cdef int callback(integer    *Status,   integer    *n,
     shape[0]  = lenru[0]
     ru_       = np.PyArray_SimpleNewFromData(1, shape, np.NPY_FLOAT64, ru)
 
-    (<object>cus.userfun)(status_, x_, needF_, neF_, F_, needG_, neG_, G_, cu_, iu_,  ru_)
+    try:
+      (<object>cus.userfun)(status_, x_, needF_, neF_, F_, needG_, neG_, G_, cu_, iu_,  ru_)
+    except Exception, e:
+      # print e
+      print traceback.format_exc()
+      Status[0] = -2
     return 0
 
 def check_memory_compatibility():
